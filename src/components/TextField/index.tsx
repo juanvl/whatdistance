@@ -22,7 +22,7 @@ export interface TextInputIconProps {
 }
 
 function TextFieldIcon(props: TextInputIconProps) {
-  return <i className="text-gray-400 h-6 w-6">{props.children}</i>;
+  return <i className="text-gray-400 m-0 p-0">{props.children}</i>;
 }
 
 TextFieldIcon.displayName = 'TextInput.Icon';

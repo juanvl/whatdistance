@@ -1,8 +1,10 @@
+import { Users } from 'phosphor-react';
 import { useState } from 'react';
 import { Autocomplete, Option } from '../../components/Autocomplete';
 import { Button } from '../../components/Button';
 import { Paper } from '../../components/Paper';
 import { Text } from '../../components/Text';
+import TextField from '../../components/TextField';
 
 const autocompleteOptions = [
   { id: 1, label: 'Option 1' },
@@ -20,7 +22,7 @@ function Playground() {
   return (
     <div className="fixed h-full w-full bg-gradient-to-t from-gray2 to-background p-4">
       <div className="mx-auto flex max-w-[700px] flex-col">
-        <Paper className="flex flex-col">
+        <Paper className="flex flex-col gap-2">
           <Text>Hello</Text>
           <Button>Test</Button>
 
@@ -29,6 +31,19 @@ function Playground() {
             value={autocompleteValue}
             onChange={setAutocompleteValue}
           />
+
+          <TextField>
+            <TextField.Input
+              type="number"
+              min={1}
+              id="numberOfPassengers"
+              placeholder="Number of passengers"
+            />
+
+            <TextField.Icon>
+              <Users />
+            </TextField.Icon>
+          </TextField>
         </Paper>
       </div>
     </div>
