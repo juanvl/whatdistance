@@ -20,32 +20,31 @@ function Playground() {
   );
 
   return (
-    <div className="fixed h-full w-full bg-gradient-to-t from-gray2 to-background p-4">
-      <div className="mx-auto flex max-w-[700px] flex-col">
-        <Paper className="flex flex-col gap-2">
-          <Text>Hello</Text>
-          <Button>Test</Button>
+    <div className="mx-auto flex max-w-[700px] flex-col">
+      <Paper className="flex flex-col gap-2">
+        <Text>Hello</Text>
+        <Button>Test</Button>
+        <Button secondary>Test</Button>
 
-          <Autocomplete
-            options={autocompleteOptions}
-            value={autocompleteValue}
-            onChange={setAutocompleteValue}
+        <Autocomplete
+          options={autocompleteOptions}
+          value={autocompleteValue}
+          onChange={setAutocompleteValue}
+        />
+
+        <TextField>
+          <TextField.Input
+            type="number"
+            min={1}
+            id="numberOfPassengers"
+            placeholder="Number of passengers"
           />
 
-          <TextField>
-            <TextField.Input
-              type="number"
-              min={1}
-              id="numberOfPassengers"
-              placeholder="Number of passengers"
-            />
-
-            <TextField.Icon>
-              <Users />
-            </TextField.Icon>
-          </TextField>
-        </Paper>
-      </div>
+          <TextField.Icon>
+            <Users />
+          </TextField.Icon>
+        </TextField>
+      </Paper>
     </div>
   );
 }
