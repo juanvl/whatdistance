@@ -19,9 +19,9 @@ module.exports = {
       black: '#0A0A0A',
       green1: '#239852',
       green2: '#31B465',
-      disabled: '#EDEDED',
       gray1: '#939393',
       gray2: '#D6DDEB',
+      disabled: '#EDEDED',
     },
     extend: {
       fontFamily: {
