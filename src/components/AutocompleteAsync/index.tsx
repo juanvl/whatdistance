@@ -1,36 +1,46 @@
 import { Combobox, Transition } from '@headlessui/react';
 import { ArrowDown, Check } from 'phosphor-react';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import { Spinner } from '../Spinner';
 
 export interface Option {
   id: string | number;
   label: string;
 }
 
-export interface AutocompleteProps {
-  options: Option[];
-  value: Option;
+export interface AutocompleteAsyncProps {
+  getOptions: Function;
+  value: Option | undefined;
   onChange: (option: Option) => void;
   label?: string;
 }
 
-export function Autocomplete({
-  options,
+export function AutocompleteAsync({
+  getOptions,
   value,
   onChange,
   label,
-}: AutocompleteProps) {
+}: AutocompleteAsyncProps) {
   const [query, setQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
 
-  const filteredOptions =
-    query === ''
-      ? options
-      : options.filter((option) =>
-          option.label
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .includes(query.toLowerCase().replace(/\s+/g, ''))
-        );
+  useEffect(() => {
+    if (query) {
+      setIsLoading(true);
+
+      getOptions(query)
+        .then((res: Option[]) => {
+          setFilteredOptions(res);
+        })
+        .catch(() => {
+          setFilteredOptions([]);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [query, getOptions]);
 
   return (
     <label>
@@ -59,7 +69,11 @@ export function Autocomplete({
             }}
           >
             <Combobox.Options className="text-base absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {filteredOptions.length === 0 && query !== '' ? (
+              {isLoading ? (
+                <div className="text-gray-700 relative cursor-default select-none py-2 px-4">
+                  <Spinner />
+                </div>
+              ) : filteredOptions.length === 0 && query !== '' ? (
                 <div className="text-gray-700 relative cursor-default select-none py-2 px-4">
                   Nothing found.
                 </div>

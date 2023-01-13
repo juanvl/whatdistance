@@ -1,35 +1,39 @@
 import type { InputHTMLAttributes, ReactNode } from 'react';
 
-export interface TextInputRootProps {
+export interface TextFieldProps {
   children: ReactNode;
+  label?: string;
 }
 
 TextField.Icon = TextFieldIcon;
 TextField.Input = TextFieldInput;
 
-function TextField(props: TextInputRootProps) {
+function TextField({ children, label }: TextFieldProps) {
   return (
-    <div className="flex h-12 w-full items-center gap-3 rounded border border-gray2 bg-white py-2.5 px-5 ring-black focus-within:ring-1">
-      {props.children}
-    </div>
+    <label>
+      {label ? <div className="mb-1 text-xs">{label}</div> : <></>}
+      <div className="flex h-12 w-full items-center gap-3 rounded border border-gray2 bg-white py-2.5 px-5 ring-black focus-within:ring-1">
+        {children}
+      </div>
+    </label>
   );
 }
 
 TextField.displayName = 'TextInput.Root';
 
-export interface TextInputIconProps {
+export interface TextFieldIconProps {
   children: ReactNode;
 }
 
-function TextFieldIcon(props: TextInputIconProps) {
+function TextFieldIcon(props: TextFieldIconProps) {
   return <i className="text-gray-400 m-0 p-0">{props.children}</i>;
 }
 
 TextFieldIcon.displayName = 'TextInput.Icon';
 
-export type TextInputInputProps = InputHTMLAttributes<HTMLInputElement>;
+export type TextFieldInputProps = InputHTMLAttributes<HTMLInputElement>;
 
-function TextFieldInput(props: TextInputInputProps) {
+function TextFieldInput(props: TextFieldInputProps) {
   return (
     <input
       className="bg-transparent text-gray-100 placeholder:text-textSecondary flex-1 text-xs outline-none"
