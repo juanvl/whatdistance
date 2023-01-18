@@ -22,6 +22,7 @@ export function Button({
         secondary ? 'bg-gray1 hover:bg-gray1/80' : 'bg-green1 hover:bg-green2',
         className
       )}
+      type="button"
       {...props}
     >
       {children}

@@ -1,4 +1,6 @@
-export const cities = [
+type CityPoint = [string, number, number];
+
+export const cities: CityPoint[] = [
   ['Paris', 48.856614, 2.352222],
   ['Marseille', 43.296482, 5.36978],
   ['Lyon', 45.764043, 4.835659],
