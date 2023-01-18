@@ -23,18 +23,22 @@ export const AutocompleteAsync = ({
 }: AutocompleteAsyncProps) => {
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
 
   useEffect(() => {
     if (query) {
       setIsLoading(true);
+      setError('');
 
       getOptions(query)
         .then((res: Option[]) => {
           setFilteredOptions(res);
         })
-        .catch(() => {
+        .catch((err: any) => {
+          setError('There was an error searching for this city ;(');
           setFilteredOptions([]);
+          console.log(err);
         })
         .finally(() => {
           setIsLoading(false);
@@ -72,6 +76,10 @@ export const AutocompleteAsync = ({
               {isLoading ? (
                 <div className="text-gray-700 relative cursor-default select-none py-2 px-4">
                   <Spinner />
+                </div>
+              ) : error ? (
+                <div className="text-gray-700 relative cursor-default select-none py-2 px-4">
+                  {error}
                 </div>
               ) : filteredOptions.length === 0 && query !== '' ? (
                 <div className="text-gray-700 relative cursor-default select-none py-2 px-4">

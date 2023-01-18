@@ -1,9 +1,22 @@
-export function Spinner() {
+import clsx from 'clsx';
+
+interface SpinnerProps {
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export function Spinner({ size }: SpinnerProps) {
   return (
     <div role="status">
       <svg
         aria-hidden="true"
-        className="mr-2 inline h-8 w-8 animate-spin fill-green2 text-gray1 dark:text-gray1"
+        className={clsx(
+          'mr-2 inline animate-spin fill-green2 text-gray1 dark:text-gray1',
+          {
+            'h-8 w-8': size === 'sm' || !size,
+            'h-12 w-12': size === 'md',
+            'h-16 w-16': size === 'lg',
+          }
+        )}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

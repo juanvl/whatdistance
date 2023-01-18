@@ -46,18 +46,38 @@ export function SearchResults() {
     }
     cities.push(cityOfDestinationParam as string);
 
-    const result = getDistancesBetweenCities(cities);
-    setDistancesResult(result);
-    firstLoaded.current = true;
-    setIsLoading(false);
+    getDistancesBetweenCities(cities)
+      .then((res) => {
+        setDistancesResult(res);
+        firstLoaded.current = true;
+      })
+      .catch((err) => {
+        setError(
+          'We are sorry but it was not possible to calculate your trip with the data provided.'
+        );
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [distancesResult, searchParams]);
 
   return (
     <Paper className="mx-auto flex max-w-[600px] flex-col">
       {isLoading ? (
-        <Spinner />
+        <div className="flex flex-col items-center">
+          <Heading>Calculating distances...</Heading>
+          <div className="p-32">
+            <Spinner size="lg" />
+          </div>
+        </div>
       ) : error ? (
-        <Text>There was a problem calculating your trip ;(</Text>
+        <div className="flex flex-col items-center">
+          <Heading>We had problems ;(</Heading>
+          <div className="p-32">
+            <Text>{error}</Text>
+          </div>
+        </div>
       ) : (
         <>
           <Heading size="lg" className="text-center">

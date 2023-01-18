@@ -2,6 +2,11 @@ import { cities, cities as citiesData } from './data';
 import { getDistanceInKilometers, roundToTwo } from './utils';
 
 export async function getCitiesByKeyword(keyword: string) {
+  if (keyword.toLowerCase() === 'fail') {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    throw new Error('failing on purpose');
+  }
+
   const results: Array<{ id: string; label: string }> = [];
 
   cities.forEach((city) => {
@@ -17,7 +22,7 @@ export async function getCitiesByKeyword(keyword: string) {
     }
   });
 
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   return results;
 }
@@ -32,9 +37,14 @@ export interface RouteDistance {
   distanceInKilometers: number;
 }
 
-export function getDistancesBetweenCities(
+export async function getDistancesBetweenCities(
   cities: string[]
-): RouteDistancesResult {
+): Promise<RouteDistancesResult> {
+  if (cities.includes('Dijon')) {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    throw new Error('failing on purpose');
+  }
+
   const routeDistances = [];
 
   for (let i = 0; i < cities.length; i++) {
@@ -61,6 +71,8 @@ export function getDistancesBetweenCities(
     0
   );
   const totalRounded = roundToTwo(totalDistanceInKilometers);
+
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   return {
     routeDistances,
