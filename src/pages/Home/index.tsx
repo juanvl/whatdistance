@@ -1,9 +1,10 @@
 import { Users } from 'phosphor-react';
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { AutocompleteAsync, Option } from '../../components/AutocompleteAsync';
 import { Button } from '../../components/Button';
 import { Paper } from '../../components/Paper';
+import { Text } from '../../components/Text';
 import TextField from '../../components/TextField';
 import { getCitiesByKeyword } from '../../server/fakeApi';
 
@@ -34,9 +35,49 @@ export function Home() {
     const param = searchParams.get('numberOfPassengers');
     return param || '';
   });
+  const [formErrors, setFormErrors] = useState<any>();
 
-  const handleSubmit = (e: FormEvent) => {
+  const validateForm = () => {
+    const errors: any = {};
+    const requiredMessage = 'This field is required';
+
+    if (!cityOfOrigin) errors.cityOfOrigin = requiredMessage;
+    if (!cityOfDestination) errors.cityOfDestination = requiredMessage;
+    if (!dateOfTheTrip) errors.dateOfTheTrip = requiredMessage;
+    if (!numberOfPassengers) errors.numberOfPassengers = requiredMessage;
+
+    const intermediateCitiesErrors = [];
+    for (let i = 0; i < intermediateCities.length; i++) {
+      if (!intermediateCities[i].id)
+        intermediateCitiesErrors[i] = requiredMessage;
+    }
+
+    if (intermediateCitiesErrors.length > 0) {
+      errors.intermediateCities = intermediateCitiesErrors;
+    }
+
+    const date = new Date(dateOfTheTrip);
+    if (date && date <= new Date()) {
+      errors.dateOfTheTrip = 'Must be a future date';
+    }
+
+    if (Object.keys(errors).length) {
+      return errors;
+    }
+
+    return null;
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const errors = validateForm();
+
+    if (errors) {
+      console.log(errors);
+      setFormErrors(errors);
+      return;
+    }
 
     navigate({
       pathname: '/search',
@@ -99,27 +140,45 @@ export function Home() {
           value={cityOfOrigin}
           onChange={setCityOfOrigin}
         />
+        {formErrors?.cityOfOrigin ? (
+          <Text size="sm" className="text-error">
+            {formErrors.cityOfOrigin}
+          </Text>
+        ) : (
+          <></>
+        )}
 
-        {intermediateCities.map((_, idx) => (
-          <div key={idx} className="flex w-full items-end gap-2">
-            <AutocompleteAsync
-              label="Intermediate city"
-              getOptions={getCitiesByKeyword}
-              value={intermediateCities[idx]}
-              onChange={(option) => {
-                handleChangeIntermediateCities({ option, idx });
-              }}
-            />
+        {intermediateCities.map((item, idx) => (
+          <div key={`${item.id}${idx}`}>
+            <div className="flex w-full items-end gap-2">
+              <AutocompleteAsync
+                label={`Intermediate city ${idx + 1}`}
+                getOptions={getCitiesByKeyword}
+                value={intermediateCities[idx]}
+                onChange={(option) => {
+                  handleChangeIntermediateCities({ option, idx });
+                }}
+              />
 
-            <button
-              type="button"
-              onClick={() => {
-                handleRemoveIntermediateCity(idx);
-              }}
-              className="align-baseline text-xs font-bold text-green2 hover:underline"
-            >
-              Remove
-            </button>
+              <button
+                type="button"
+                onClick={() => {
+                  handleRemoveIntermediateCity(idx);
+                }}
+                className="align-baseline text-xs font-bold text-green2 hover:underline"
+              >
+                Remove
+              </button>
+            </div>
+
+            {formErrors?.intermediateCities &&
+            formErrors?.intermediateCities[idx] ? (
+              <Text size="sm" className="text-error">
+                {formErrors.intermediateCities[idx]}
+              </Text>
+            ) : (
+              <></>
+            )}
           </div>
         ))}
 
@@ -137,6 +196,13 @@ export function Home() {
           value={cityOfDestination}
           onChange={setCityOfDestination}
         />
+        {formErrors?.cityOfDestination ? (
+          <Text size="sm" className="text-error">
+            {formErrors.cityOfDestination}
+          </Text>
+        ) : (
+          <></>
+        )}
 
         <TextField label="Date of the trip*">
           <TextField.Input
@@ -149,6 +215,13 @@ export function Home() {
             }}
           />
         </TextField>
+        {formErrors?.dateOfTheTrip ? (
+          <Text size="sm" className="text-error">
+            {formErrors.dateOfTheTrip}
+          </Text>
+        ) : (
+          <></>
+        )}
 
         <TextField label="Number of passengers*">
           <TextField.Input
@@ -166,6 +239,13 @@ export function Home() {
             <Users />
           </TextField.Icon>
         </TextField>
+        {formErrors?.numberOfPassengers ? (
+          <Text size="sm" className="text-error">
+            {formErrors.numberOfPassengers}
+          </Text>
+        ) : (
+          <></>
+        )}
 
         <Button type="submit" fullWidth>
           Search
