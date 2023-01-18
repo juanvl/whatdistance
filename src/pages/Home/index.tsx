@@ -18,9 +18,7 @@ export function Home() {
   });
   const [intermediateCities, setIntermediateCities] = useState<Option[]>(() => {
     const param = searchParams.get('intermediateCities');
-    return param
-      ? param.split(',').map((c) => ({ id: c, label: c }))
-      : [{ id: '', label: '' }];
+    return param ? param.split(',').map((c) => ({ id: c, label: c })) : [];
   });
   const [cityOfDestination, setCityOfDestination] = useState<Option | null>(
     () => {
@@ -28,8 +26,14 @@ export function Home() {
       return param ? { id: param, label: param } : null;
     }
   );
-  const [dateOfTheTrip, setDateOfTheTrip] = useState('');
-  const [numberOfPassengers, setNumberOfPassengers] = useState('');
+  const [dateOfTheTrip, setDateOfTheTrip] = useState(() => {
+    const param = searchParams.get('dateOfTheTrip');
+    return param || '';
+  });
+  const [numberOfPassengers, setNumberOfPassengers] = useState(() => {
+    const param = searchParams.get('numberOfPassengers');
+    return param || '';
+  });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -96,7 +100,7 @@ export function Home() {
           onChange={setCityOfOrigin}
         />
 
-        {intermediateCities.map((item, idx) => (
+        {intermediateCities.map((_, idx) => (
           <div key={idx} className="flex w-full items-end gap-2">
             <AutocompleteAsync
               label="Intermediate city"
@@ -107,24 +111,25 @@ export function Home() {
               }}
             />
 
-            {idx !== 0 ? (
-              <Button
-                secondary
-                onClick={() => {
-                  handleRemoveIntermediateCity(idx);
-                }}
-              >
-                Remove
-              </Button>
-            ) : (
-              <></>
-            )}
+            <button
+              type="button"
+              onClick={() => {
+                handleRemoveIntermediateCity(idx);
+              }}
+              className="align-baseline text-xs font-bold text-green2 hover:underline"
+            >
+              Remove
+            </button>
           </div>
         ))}
 
-        <Button secondary onClick={handleAddIntermediateCity}>
-          Add city
-        </Button>
+        <button
+          type="button"
+          onClick={handleAddIntermediateCity}
+          className="self-start text-xs font-bold text-green2 hover:underline"
+        >
+          Add intermediate city
+        </button>
 
         <AutocompleteAsync
           label="City of destination*"

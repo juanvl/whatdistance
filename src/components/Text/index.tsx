@@ -2,13 +2,12 @@ import { clsx } from 'clsx';
 import type { ReactNode } from 'react';
 
 export interface TextProps {
-  size?: 'sm' | 'md' | 'lg';
   children: ReactNode;
-  asChild?: boolean;
+  size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
-export function Text({ size = 'md', children, asChild, className }: TextProps) {
+export function Text({ size = 'md', children, className }: TextProps) {
   return (
     <span
       className={clsx(

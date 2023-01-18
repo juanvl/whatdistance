@@ -1,5 +1,6 @@
+import { ArrowLeft } from 'phosphor-react';
 import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Heading } from '../../components/Heading';
 import { Paper } from '../../components/Paper';
 import { Spinner } from '../../components/Spinner';
@@ -10,6 +11,7 @@ import {
 } from '../../server/fakeApi';
 
 export function SearchResults() {
+  const location = useLocation();
   const [searchParams] = useSearchParams({});
 
   const [distancesResult, setDistancesResult] =
@@ -23,7 +25,7 @@ export function SearchResults() {
     const date = searchParams.get('dateOfTheTrip');
 
     if (date) {
-      return new Date(date).toLocaleDateString();
+      return new Date(date + 'T00:00').toLocaleDateString();
     } else {
       return '---';
     }
@@ -64,6 +66,17 @@ export function SearchResults() {
 
   return (
     <Paper className="mx-auto flex max-w-[600px] flex-col">
+      <Link
+        to={{
+          pathname: '/',
+          search: location.search,
+        }}
+      >
+        <Text className="flex items-center gap-1">
+          <ArrowLeft /> Go back
+        </Text>
+      </Link>
+
       {isLoading ? (
         <div className="flex flex-col items-center">
           <Heading>Calculating distances...</Heading>
