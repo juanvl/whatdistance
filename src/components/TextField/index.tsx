@@ -12,7 +12,7 @@ function TextField({ children, label }: TextFieldProps) {
   return (
     <label>
       {label ? <div className="mb-1 text-xs">{label}</div> : <></>}
-      <div className="flex h-12 w-full items-center gap-3 rounded border border-gray2 bg-white py-2.5 px-5 ring-black focus-within:ring-1">
+      <div className="flex h-10 w-full items-center gap-3 rounded border border-gray2 bg-white py-2.5 px-5 ring-black focus-within:ring-1">
         {children}
       </div>
     </label>

@@ -4,23 +4,23 @@ import { Fragment, useEffect, useState } from 'react';
 import { Spinner } from '../Spinner';
 
 export interface Option {
-  id: string | number;
+  id: string;
   label: string;
 }
 
 export interface AutocompleteAsyncProps {
   getOptions: Function;
-  value: Option | undefined;
+  value: Option | null | undefined;
   onChange: (option: Option) => void;
   label?: string;
 }
 
-export function AutocompleteAsync({
+export const AutocompleteAsync = ({
   getOptions,
   value,
   onChange,
   label,
-}: AutocompleteAsyncProps) {
+}: AutocompleteAsyncProps) => {
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
@@ -43,11 +43,11 @@ export function AutocompleteAsync({
   }, [query, getOptions]);
 
   return (
-    <label>
+    <label className="w-full">
       {label ? <div className="mb-1 text-xs">{label}</div> : <></>}
-      <Combobox value={value} onChange={onChange}>
+      <Combobox defaultValue={value} onChange={onChange}>
         <div className="relative mt-1">
-          <div className="flex h-12 w-full items-center gap-3 rounded border border-gray2 bg-white py-2.5 px-5 ring-black focus-within:ring-1">
+          <div className="flex h-10 w-full items-center gap-3 rounded border border-gray2 bg-white py-2.5 px-5 ring-black focus-within:ring-1">
             <Combobox.Input
               className="bg-transparent text-gray-100 placeholder:text-textSecondary flex-1 text-xs outline-none"
               displayValue={(option: any) => option?.label}
@@ -117,4 +117,4 @@ export function AutocompleteAsync({
       </Combobox>
     </label>
   );
-}
+};

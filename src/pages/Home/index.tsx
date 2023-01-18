@@ -1,20 +1,94 @@
 import { Users } from 'phosphor-react';
-import { useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { AutocompleteAsync, Option } from '../../components/AutocompleteAsync';
+import { Button } from '../../components/Button';
 import { Paper } from '../../components/Paper';
 import TextField from '../../components/TextField';
 import { getCitiesByKeyword } from '../../server/fakeApi';
 
 export function Home() {
-  const [cityOfOrigin, setCityOfOrigin] = useState<Option>();
-  const [intermediateCity, setIntermediateCity] = useState<Option>();
-  const [cityOfDestination, setCityOfDestination] = useState<Option>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams({});
+
+  const [cityOfOrigin, setCityOfOrigin] = useState<Option | null>(() => {
+    const param = searchParams.get('cityOfOrigin');
+    return param ? { id: param, label: param } : null;
+  });
+  const [intermediateCities, setIntermediateCities] = useState<Option[]>(() => {
+    const param = searchParams.get('intermediateCities');
+    return param
+      ? param.split(',').map((c) => ({ id: c, label: c }))
+      : [{ id: '', label: '' }];
+  });
+  const [cityOfDestination, setCityOfDestination] = useState<Option | null>(
+    () => {
+      const param = searchParams.get('cityOfDestination');
+      return param ? { id: param, label: param } : null;
+    }
+  );
   const [dateOfTheTrip, setDateOfTheTrip] = useState('');
   const [numberOfPassengers, setNumberOfPassengers] = useState('');
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    navigate({
+      pathname: '/search',
+      search: location.search,
+    });
+  };
+
+  const handleChangeIntermediateCities = ({
+    option,
+    idx,
+  }: {
+    option: Option;
+    idx: number;
+  }) => {
+    const newIntermediateCities = intermediateCities.map((city, i) => {
+      if (i === idx) {
+        return option;
+      }
+      return city;
+    });
+
+    setIntermediateCities(newIntermediateCities);
+  };
+
+  const handleAddIntermediateCity = () => {
+    setIntermediateCities((current) => [...current, { id: '', label: '' }]);
+  };
+
+  const handleRemoveIntermediateCity = (idx: number) => {
+    const newIntermediateCities = [...intermediateCities];
+    newIntermediateCities.splice(idx, 1);
+    setIntermediateCities(newIntermediateCities);
+  };
+
+  useEffect(() => {
+    const serializedFields = {
+      cityOfOrigin: cityOfOrigin?.id || '',
+      intermediateCities: intermediateCities.map((c) => c.id).join(','),
+      cityOfDestination: cityOfDestination?.id || '',
+      dateOfTheTrip,
+      numberOfPassengers,
+    };
+
+    setSearchParams(new URLSearchParams(serializedFields));
+  }, [
+    cityOfDestination,
+    intermediateCities,
+    cityOfOrigin,
+    dateOfTheTrip,
+    numberOfPassengers,
+    setSearchParams,
+  ]);
+
   return (
-    <div className="mx-auto flex max-w-[600px] flex-col">
-      <Paper className="flex flex-col gap-2">
+    <Paper className="mx-auto flex max-w-[600px] flex-col">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <AutocompleteAsync
           label="City of origin*"
           getOptions={getCitiesByKeyword}
@@ -22,12 +96,35 @@ export function Home() {
           onChange={setCityOfOrigin}
         />
 
-        <AutocompleteAsync
-          label="Intermediate city"
-          getOptions={getCitiesByKeyword}
-          value={intermediateCity}
-          onChange={setIntermediateCity}
-        />
+        {intermediateCities.map((item, idx) => (
+          <div key={idx} className="flex w-full items-end gap-2">
+            <AutocompleteAsync
+              label="Intermediate city"
+              getOptions={getCitiesByKeyword}
+              value={intermediateCities[idx]}
+              onChange={(option) => {
+                handleChangeIntermediateCities({ option, idx });
+              }}
+            />
+
+            {idx !== 0 ? (
+              <Button
+                secondary
+                onClick={() => {
+                  handleRemoveIntermediateCity(idx);
+                }}
+              >
+                Remove
+              </Button>
+            ) : (
+              <></>
+            )}
+          </div>
+        ))}
+
+        <Button secondary onClick={handleAddIntermediateCity}>
+          Add city
+        </Button>
 
         <AutocompleteAsync
           label="City of destination*"
@@ -64,7 +161,11 @@ export function Home() {
             <Users />
           </TextField.Icon>
         </TextField>
-      </Paper>
-    </div>
+
+        <Button type="submit" fullWidth>
+          Search
+        </Button>
+      </form>
+    </Paper>
   );
 }

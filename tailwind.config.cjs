@@ -22,6 +22,7 @@ module.exports = {
       gray1: '#939393',
       gray2: '#D6DDEB',
       disabled: '#EDEDED',
+      error: 'red',
     },
     extend: {
       fontFamily: {

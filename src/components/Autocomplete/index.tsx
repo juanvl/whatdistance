@@ -37,7 +37,7 @@ export function Autocomplete({
       {label ? <div className="mb-1 text-xs">{label}</div> : <></>}
       <Combobox value={value} onChange={onChange}>
         <div className="relative mt-1">
-          <div className="flex h-12 w-full items-center gap-3 rounded border border-gray2 bg-white py-2.5 px-5 ring-black focus-within:ring-1">
+          <div className="flex h-10 w-full items-center gap-3 rounded border border-gray2 bg-white py-2.5 px-5 ring-black focus-within:ring-1">
             <Combobox.Input
               className="bg-transparent text-gray-100 placeholder:text-textSecondary flex-1 text-xs outline-none"
               displayValue={(option: any) => option?.label}
