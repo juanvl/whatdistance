@@ -1,4 +1,4 @@
-import { ArrowLeft } from 'phosphor-react';
+import { ArrowDown, ArrowLeft } from 'phosphor-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Heading } from '../../components/Heading';
@@ -97,33 +97,45 @@ export function SearchResults() {
             Your trip
           </Heading>
 
-          <div className="p-2" />
+          <div className="p-4" />
 
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col">
-              <Text className="font-bold">Date of the trip</Text>
+          <div className="mx-auto">
+            <div className="flex flex-col gap-2 text-center">
+              <Text className="text-xs font-bold text-gray1">
+                Date of the trip
+              </Text>
               <Text>{getDateOfTheTrip()}</Text>
-            </div>
 
-            <div className="flex flex-col">
-              <Text className="font-bold">Number of passengers</Text>
+              <Text className="text-xs font-bold text-gray1">
+                Number of passengers
+              </Text>
               <Text>{searchParams.get('numberOfPassengers') || '---'}</Text>
-            </div>
 
-            <div className="flex flex-col">
-              <Text className="font-bold">Route</Text>
+              <Text className="py-4 text-lg font-bold">Route</Text>
 
               {distancesResult?.routeDistances.map((item, idx) => (
                 <div key={idx}>
-                  <Text>
-                    {item.start} to {item.end}: {item.distanceInKilometers} KM
-                  </Text>
+                  <Text>{item.start}</Text>
+                  <div className="flex items-center justify-end">
+                    <ArrowDown size={30} />
+                    <Text size="sm">{item.distanceInKilometers} km</Text>
+                  </div>
+                  {distancesResult.routeDistances.length - 1 === idx ? (
+                    <Text>{item.end}</Text>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               ))}
 
-              <Heading size="sm">
-                Total: {distancesResult?.totalDistanceInKilometers} KM
-              </Heading>
+              <div className="p-2" />
+
+              <Text size="lg">
+                Total:{' '}
+                <Text size="lg" className="font-bold">
+                  {distancesResult?.totalDistanceInKilometers} km
+                </Text>
+              </Text>
             </div>
           </div>
         </>

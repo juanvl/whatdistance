@@ -24,10 +24,8 @@ module.exports = {
       disabled: '#EDEDED',
       error: 'red',
     },
-    extend: {
-      fontFamily: {
-        sans: ['Inter', ...defaultTheme.fontFamily.sans],
-      },
+    fontFamily: {
+      sans: ['Inter', ...defaultTheme.fontFamily.sans],
     },
   },
   plugins: [],

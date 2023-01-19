@@ -11,7 +11,11 @@ TextField.Input = TextFieldInput;
 function TextField({ children, label }: TextFieldProps) {
   return (
     <label>
-      {label ? <div className="mb-1 text-xs">{label}</div> : <></>}
+      {label ? (
+        <div className="mb-1 text-xs font-bold text-gray1">{label}</div>
+      ) : (
+        <></>
+      )}
       <div className="flex h-10 w-full items-center gap-3 rounded border border-gray2 bg-white py-2.5 px-5 ring-black focus-within:ring-1">
         {children}
       </div>
@@ -36,7 +40,7 @@ export type TextFieldInputProps = InputHTMLAttributes<HTMLInputElement>;
 function TextFieldInput(props: TextFieldInputProps) {
   return (
     <input
-      className="bg-transparent text-gray-100 placeholder:text-textSecondary flex-1 text-xs outline-none"
+      className="bg-transparent text-gray-100 flex-1 text-xs outline-none placeholder:text-gray1"
       {...props}
     />
   );

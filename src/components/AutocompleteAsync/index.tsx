@@ -47,13 +47,13 @@ export const AutocompleteAsync = ({
   }, [query, getOptions]);
 
   return (
-    <label className="w-full">
+    <label className="w-full font-bold text-gray1">
       {label ? <div className="mb-1 text-xs">{label}</div> : <></>}
       <Combobox defaultValue={value} onChange={onChange}>
         <div className="relative mt-1">
           <div className="flex h-10 w-full items-center gap-3 rounded border border-gray2 bg-white py-2.5 px-5 ring-black focus-within:ring-1">
             <Combobox.Input
-              className="bg-transparent text-gray-100 placeholder:text-textSecondary flex-1 text-xs outline-none"
+              className="bg-transparent flex-1 text-xs font-normal text-black outline-none placeholder:text-gray1"
               displayValue={(option: Option) => option?.label || ''}
               onChange={(event) => {
                 setQuery(event.target.value);
@@ -74,7 +74,7 @@ export const AutocompleteAsync = ({
           >
             <Combobox.Options className="text-base absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
               {isLoading ? (
-                <div className="text-gray-700 relative cursor-default select-none py-2 px-4">
+                <div className="text-gray-700 relative flex cursor-default select-none justify-center py-2 px-4">
                   <Spinner />
                 </div>
               ) : error ? (
@@ -91,7 +91,7 @@ export const AutocompleteAsync = ({
                     key={option.id}
                     className={({ active }) =>
                       `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                        active ? 'bg-gray1 text-white' : 'text-gray-900'
+                        active ? 'bg-gray1 text-white' : 'text-black'
                       }`
                     }
                     value={option}

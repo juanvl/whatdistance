@@ -135,7 +135,7 @@ export function Home() {
     <Paper className="mx-auto flex max-w-[600px] flex-col">
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <AutocompleteAsync
-          label="City of origin*"
+          label="City of origin"
           getOptions={getCitiesByKeyword}
           value={cityOfOrigin}
           onChange={setCityOfOrigin}
@@ -191,7 +191,7 @@ export function Home() {
         </button>
 
         <AutocompleteAsync
-          label="City of destination*"
+          label="City of destination"
           getOptions={getCitiesByKeyword}
           value={cityOfDestination}
           onChange={setCityOfDestination}
@@ -204,7 +204,7 @@ export function Home() {
           <></>
         )}
 
-        <TextField label="Date of the trip*">
+        <TextField label="Date of the trip">
           <TextField.Input
             type="date"
             id="dateOfTheTrip"
@@ -223,7 +223,7 @@ export function Home() {
           <></>
         )}
 
-        <TextField label="Number of passengers*">
+        <TextField label="Number of passengers">
           <TextField.Input
             type="number"
             min={1}
