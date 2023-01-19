@@ -120,7 +120,9 @@ export function SearchResults() {
                   <Text>{item.start}</Text>
                   <div className="flex items-center justify-end">
                     <ArrowDown size={30} />
-                    <Text size="sm">{item.distanceInKilometers} km</Text>
+                    <Text size="sm" className="w-[40%]">
+                      {item.distanceInKilometers} km
+                    </Text>
                   </div>
                   {distancesResult.routeDistances.length - 1 === idx ? (
                     <Text>{item.end}</Text>
