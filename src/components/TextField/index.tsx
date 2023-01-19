@@ -40,7 +40,7 @@ export type TextFieldInputProps = InputHTMLAttributes<HTMLInputElement>;
 function TextFieldInput(props: TextFieldInputProps) {
   return (
     <input
-      className="bg-transparent text-gray-100 flex-1 text-xs outline-none placeholder:text-gray1"
+      className="bg-transparent text-gray-100 w-full flex-1 text-xs outline-none placeholder:text-gray1"
       {...props}
     />
   );

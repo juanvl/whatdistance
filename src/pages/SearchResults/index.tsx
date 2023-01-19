@@ -77,6 +77,8 @@ export function SearchResults() {
         </Text>
       </Link>
 
+      <div className="p-2" />
+
       {isLoading ? (
         <div className="flex flex-col items-center">
           <Heading>Calculating distances...</Heading>

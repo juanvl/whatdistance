@@ -53,7 +53,7 @@ export const AutocompleteAsync = ({
         <div className="relative mt-1">
           <div className="flex h-10 w-full items-center gap-3 rounded border border-gray2 bg-white py-2.5 px-5 ring-black focus-within:ring-1">
             <Combobox.Input
-              className="bg-transparent flex-1 text-xs font-normal text-black outline-none placeholder:text-gray1"
+              className="bg-transparent w-full flex-1 text-xs font-normal text-black outline-none placeholder:text-gray1"
               displayValue={(option: Option) => option?.label || ''}
               onChange={(event) => {
                 setQuery(event.target.value);
