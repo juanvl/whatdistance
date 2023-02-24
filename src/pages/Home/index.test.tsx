@@ -1,18 +1,21 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { Home } from '.';
 
 describe('Home page', () => {
-  beforeEach(() => {
+  afterEach(() => {
+    window.history.pushState(null, document.title, '/');
+  });
+
+  it('should render', () => {
     render(
       <BrowserRouter>
         <Home />
       </BrowserRouter>
     );
-  });
 
-  it('should render', () => {
     const text = screen.getByText('City of origin');
     const button = screen.getByText('Search');
 
@@ -20,34 +23,94 @@ describe('Home page', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('should be able to fill inputs correctly', async () => {
-    const cityOfOrigin = screen.getByRole('combobox', {
-      name: /city of origin\*/i,
-    });
-    const cityOfDestination = screen.getByRole('combobox', {
-      name: /city of destination\*/i,
-    });
-    const dateOfTheTrip = screen.getByLabelText(/date of the trip\*/i);
-    const numberOfPassengers = screen.getByRole('spinbutton', {
-      name: /number of passengers\*/i,
-    });
-    // const submitButton = screen.getByRole('button', {
-    //   name: /search/i,
-    // });
+  it('should be able to submit a valid form with only required fields filled in', async () => {
+    render(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
 
-    fireEvent.input(cityOfOrigin, 'Paris');
-    fireEvent.input(cityOfDestination, 'Nantes');
-    fireEvent.input(dateOfTheTrip, '12/12/2099');
-    fireEvent.input(numberOfPassengers, '3');
+    const cityOfOrigin = screen.getByLabelText(/city of origin/i);
+    await userEvent.type(cityOfOrigin, 'Paris');
+    const parisOption = await screen.findByRole('option', {
+      name: /paris/i,
+    });
+    await userEvent.click(parisOption);
+
+    const cityOfDestination = screen.getByLabelText(/city of destination/i);
+    await userEvent.type(cityOfDestination, 'Nantes');
+    const nantesOption = await screen.findByRole('option', {
+      name: /nantes/i,
+    });
+    await userEvent.click(nantesOption);
+
+    const dateOfTheTrip = screen.getByPlaceholderText(/date of the trip/i);
+    fireEvent.change(dateOfTheTrip, { target: { value: '2099-12-12' } });
+
+    const numberOfPassengers =
+      screen.getByPlaceholderText(/number of passengers/i);
+    fireEvent.change(numberOfPassengers, { target: { value: 3 } });
+
+    const submitButton = screen.getByRole('button', {
+      name: /search/i,
+    });
+
+    expect(cityOfOrigin).toHaveValue('Paris');
+    expect(cityOfDestination).toHaveValue('Nantes');
+    expect(dateOfTheTrip).toHaveValue('2099-12-12');
+    expect(numberOfPassengers).toHaveValue(3);
+
+    await userEvent.click(submitButton);
+
+    expect(global.window.location.pathname).toContain('/search');
+    expect(global.window.location.search).toContain('cityOfOrigin=Paris');
+    expect(global.window.location.search).toContain('cityOfDestination=Nantes');
+    expect(global.window.location.search).toContain('dateOfTheTrip=2099-12-12');
+    expect(global.window.location.search).toContain('numberOfPassengers=3');
   });
 
-  // it('should be able to submit a valid form', async () => {
+  it('should NOT be able to submit a INVALID form with only required fields filled in', async () => {
+    render(
+      <BrowserRouter>
+        <Home />
+      </BrowserRouter>
+    );
 
-  // });
+    const cityOfOrigin = screen.getByLabelText(/city of origin/i);
+    await userEvent.type(cityOfOrigin, 'Paris');
+    const parisOption = await screen.findByRole('option', {
+      name: /paris/i,
+    });
+    await userEvent.click(parisOption);
 
-  // it('should NOT be able to submit a invalid form', () => {
-  //   render(<Home />);
-  // });
+    const cityOfDestination = screen.getByLabelText(/city of destination/i);
+    await userEvent.type(cityOfDestination, 'Nantes');
+    const nantesOption = await screen.findByRole('option', {
+      name: /nantes/i,
+    });
+    await userEvent.click(nantesOption);
+
+    const numberOfPassengers =
+      screen.getByPlaceholderText(/number of passengers/i);
+    fireEvent.change(numberOfPassengers, { target: { value: 3 } });
+
+    const submitButton = screen.getByRole('button', {
+      name: /search/i,
+    });
+
+    expect(cityOfOrigin).toHaveValue('Paris');
+    expect(cityOfDestination).toHaveValue('Nantes');
+    expect(numberOfPassengers).toHaveValue(3);
+
+    await userEvent.click(submitButton);
+
+    const requiredDateError = await screen.findByText(
+      /this field is required/i
+    );
+
+    expect(requiredDateError).toBeInTheDocument();
+    expect(global.window.location.pathname).not.toContain('/search');
+  });
 
   // it('should be able to add multiple intermediate cities', () => {
   //   render(<Home />);
