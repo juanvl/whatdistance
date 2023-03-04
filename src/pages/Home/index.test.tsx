@@ -1,8 +1,11 @@
-import '@testing-library/jest-dom';
-import { fireEvent, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { Home } from '.';
+import {
+  fireEvent,
+  render,
+  screen,
+  userEvent,
+} from '../../test/utils/test-utils';
 
 describe('Home page', () => {
   afterEach(() => {
